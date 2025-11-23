@@ -5,23 +5,26 @@
 
 package com.startdb.sust;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @Service
 public class ColetaService {
-    // Trazendo o essencial.
-    private Pontos pontos;
-    private final ObjectMapper objMapper = new ObjectMapper();
+    @Autowired
+    private PontosRepository pontosRepository;
+    
+    @Autowired
+    private PontoColetaRepository pontoColetaRepository;
 
     // Retorna todos os pontos de Pontos.java
-    public List<PontoColeta> getTudo(){return pontos.getPontos();}
+    public List<PontoColeta> getTudo(){
+        return pontoColetaRepository.findAll();
+    }
 
     // Retorna um ponto específico por nome.
     public PontoColeta getPontoPorNome(String nome){
-        if(pontos == null){return null;}
-        return pontos.getPontos().stream()
+        return pontoColetaRepository.findAll().stream()
         .filter(c -> c.getNomePonto().equalsIgnoreCase(nome))
         .findFirst()
         .orElse(null);
@@ -29,9 +32,8 @@ public class ColetaService {
 
     // Retorna uma lista de pontos de coleta, baseando-se no tipo de coleta sendo feita lá.
     public List<PontoColeta> getPontoPorColeta(String tipo){
-        if(pontos == null){return null;}
-        return pontos.getPontos().stream()
-        .filter(c -> c.getTipoColeta().getNome().equalsIgnoreCase(tipo))
+        return pontoColetaRepository.findAll().stream()
+        .filter(c -> c.getTipoColeta() != null && c.getTipoColeta().getNome().equalsIgnoreCase(tipo))
         .toList();
     }
 }

@@ -6,10 +6,19 @@
 
 package com.startdb.sust;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class PontoColeta {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    // Bastante coisa sendo salva como String por enquanto, acredito que seja algo para refinar à diante.
+    @ManyToOne
     private TipoColeta tipoColeta;
     private String nomePonto, endereco, desc, horarioFunc;
      

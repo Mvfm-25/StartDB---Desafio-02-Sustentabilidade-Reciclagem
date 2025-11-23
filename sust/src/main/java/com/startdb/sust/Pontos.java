@@ -4,12 +4,21 @@
 // Criado : 23/11/2025  || Última modificação : 23/11/2025
 
 package com.startdb.sust;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 
+@Entity
 public class Pontos {
     // Podemos fazer com que cada cidade mantenha seus próprios pontos para não termos algo muito centralizado.
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nomeCidade;
+    @OneToMany
     private List<PontoColeta> pontos;
 
     // Novamente, receita de bolo.
