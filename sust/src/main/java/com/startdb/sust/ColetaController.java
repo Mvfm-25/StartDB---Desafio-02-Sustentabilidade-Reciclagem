@@ -1,20 +1,41 @@
 package com.startdb.sust;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class ColetaController {
     
     @Autowired
     private ColetaService coletaService;
 
+    // GET todos os pontos
     @GetMapping("/pontos")
-    public String mostraPontos(Model modelo){
-        modelo.addAttribute("Pontos de coleta", coletaService.getTudo());
-        // Nome do futuro arquivo html.
-        return "pontos";
+    public ResponseEntity<List<PontoColeta>> getTodosPontos(){
+        return ResponseEntity.ok(coletaService.getTudo());
+    }
+
+    // GET pontos de uma cidade específica
+    @GetMapping("/cidades/{nomeCidade}/pontos")
+    public ResponseEntity<List<PontoColeta>> getPontosPorCidade(@PathVariable String nomeCidade){
+        List<PontoColeta> pontos = coletaService.getPontosPorCidade(nomeCidade);
+        if(pontos == null || pontos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pontos);
+    }
+
+    // POST novo ponto em uma cidade
+    @PostMapping("/cidades/{nomeCidade}/pontos")
+    public ResponseEntity<PontoColeta> adicionarPonto(@PathVariable String nomeCidade, @RequestBody PontoColeta novoPonto){
+        PontoColeta pontoSalvo = coletaService.adicionarPontoACidade(nomeCidade, novoPonto);
+        if(pontoSalvo == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(pontoSalvo);
     }
 }

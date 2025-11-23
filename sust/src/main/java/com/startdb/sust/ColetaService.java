@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class ColetaService {
     @Autowired
-    private PontosRepository pontosRepository;
+    private CidadeRepository cidadeRepository;
     
     @Autowired
     private PontoColetaRepository pontoColetaRepository;
@@ -35,5 +35,39 @@ public class ColetaService {
         return pontoColetaRepository.findAll().stream()
         .filter(c -> c.getTipoColeta() != null && c.getTipoColeta().getNome().equalsIgnoreCase(tipo))
         .toList();
+    }
+
+    // Retorna todos os pontos de uma cidade específica
+    public List<PontoColeta> getPontosPorCidade(String nomeCidade){
+        Cidade cidade = cidadeRepository.findAll().stream()
+        .filter(c -> c.getNomeCidade().equalsIgnoreCase(nomeCidade))
+        .findFirst()
+        .orElse(null);
+        
+        if(cidade == null || cidade.getPontos() == null){
+            return null;
+        }
+        return cidade.getPontos();
+    }
+
+    // Adiciona um novo ponto a uma cidade
+    public PontoColeta adicionarPontoACidade(String nomeCidade, PontoColeta novoPonto){
+        Cidade cidade = cidadeRepository.findAll().stream()
+        .filter(c -> c.getNomeCidade().equalsIgnoreCase(nomeCidade))
+        .findFirst()
+        .orElse(null);
+        
+        if(cidade == null){
+            return null;
+        }
+        
+        // Salva o novo ponto no banco
+        PontoColeta pontoSalvo = pontoColetaRepository.save(novoPonto);
+        
+        // Adiciona à lista de pontos da cidade
+        cidade.getPontos().add(pontoSalvo);
+        cidadeRepository.save(cidade);
+        
+        return pontoSalvo;
     }
 }

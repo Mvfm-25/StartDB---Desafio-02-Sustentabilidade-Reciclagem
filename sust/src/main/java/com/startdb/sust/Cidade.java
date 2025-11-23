@@ -12,7 +12,7 @@ import jakarta.persistence.OneToMany;
 import java.util.List;
 
 @Entity
-public class Pontos {
+public class Cidade {
     // Podemos fazer com que cada cidade mantenha seus próprios pontos para não termos algo muito centralizado.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Pontos {
     private List<PontoColeta> pontos;
 
     // Novamente, receita de bolo.
-    public Pontos(){}
+    public Cidade(){}
 
     public long getId(){return id;}
     public void setId(long id){this.id = id;}
