@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.ElementCollection;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PontoColeta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
+    @ManyToMany
     private TipoColeta tipoColeta;
     private String nomePonto;
     @Embedded
