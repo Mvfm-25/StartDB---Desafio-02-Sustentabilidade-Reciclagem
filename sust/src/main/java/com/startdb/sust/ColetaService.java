@@ -40,7 +40,7 @@ public class ColetaService {
     // Retorna todos os pontos de uma cidade específica
     public List<PontoColeta> getPontosPorCidade(String nomeCidade){
         Cidade cidade = cidadeRepository.findAll().stream()
-        .filter(c -> c.getNomeCidade().equalsIgnoreCase(nomeCidade))
+        .filter(c -> c.getNome().equalsIgnoreCase(nomeCidade))
         .findFirst()
         .orElse(null);
         
@@ -53,7 +53,7 @@ public class ColetaService {
     // Adiciona um novo ponto a uma cidade
     public PontoColeta adicionarPontoACidade(String nomeCidade, PontoColeta novoPonto){
         Cidade cidade = cidadeRepository.findAll().stream()
-        .filter(c -> c.getNomeCidade().equalsIgnoreCase(nomeCidade))
+        .filter(c -> c.getNome().equalsIgnoreCase(nomeCidade))
         .findFirst()
         .orElse(null);
         
@@ -74,7 +74,7 @@ public class ColetaService {
     // Retorna pontos de um bairro específico
     public List<PontoColeta> getPontosPorBairro(String nomeBairro){
         return pontoColetaRepository.findAll().stream()
-        .filter(p -> p.getEndereco() != null && p.getEndereco().getBairro().equalsIgnoreCase(nomeBairro))
+        .filter(p -> p.getEndereco() != null && p.getEndereco().getBairro() != null && p.getEndereco().getBairro().equalsIgnoreCase(nomeBairro))
         .toList();
     }
 

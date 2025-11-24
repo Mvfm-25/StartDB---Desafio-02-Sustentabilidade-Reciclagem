@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,9 @@ public class Cidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String nomeCidade;
+    private String nome;
+    @ManyToOne
+    private Uf uf;
     @OneToMany
     private List<PontoColeta> pontos;
 
@@ -27,8 +30,11 @@ public class Cidade {
     public long getId(){return id;}
     public void setId(long id){this.id = id;}
 
-    public String getNomeCidade(){return nomeCidade;}
-    public void setNomeCidade(String nomeCidade){this.nomeCidade = nomeCidade;}
+    public String getNome(){return nome;}
+    public void setNome(String nome){this.nome = nome;}
+
+    public Uf getUf(){return uf;}
+    public void setUf(Uf uf){this.uf = uf;}
 
     public List<PontoColeta> getPontos(){return pontos;}
     public void setPontos(List<PontoColeta> pontos){this.pontos = pontos;}
