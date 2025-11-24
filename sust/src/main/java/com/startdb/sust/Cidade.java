@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class Cidade {
     private String nome;
     @ManyToOne
     private Uf uf;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PontoColeta> pontos;
 
     // Novamente, receita de bolo.
