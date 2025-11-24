@@ -11,6 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.ElementCollection;
+import java.util.List;
 
 @Entity
 public class PontoColeta {
@@ -20,7 +23,12 @@ public class PontoColeta {
     private long id;
     @ManyToOne
     private TipoColeta tipoColeta;
-    private String nomePonto, endereco, desc, horarioFunc;
+    private String nomePonto;
+    @Embedded
+    private Endereco endereco;
+    private String desc;
+    @ElementCollection
+    private List<HorarioFuncionamento> horariosFunc;
      
     public PontoColeta(){}
 
@@ -34,13 +42,13 @@ public class PontoColeta {
     public TipoColeta getTipoColeta(){return tipoColeta;}
     public void setTipoColeta(TipoColeta tipoColeta){this.tipoColeta = tipoColeta;}
 
-    public String getEndereco(){return endereco;}
-    public void setEndereco(String endereco){this.endereco = endereco;}
+    public Endereco getEndereco(){return endereco;}
+    public void setEndereco(Endereco endereco){this.endereco = endereco;}
 
     public String getDesc(){return desc;}
     public void setDesc(String desc){this.desc = desc;}
 
-    public String getHorarioFunc(){return horarioFunc;}
-    public void set(String horarioFunc){this.horarioFunc = horarioFunc;}
+    public List<HorarioFuncionamento> getHorariosFunc(){return horariosFunc;}
+    public void setHorariosFunc(List<HorarioFuncionamento> horariosFunc){this.horariosFunc = horariosFunc;}
 
 }
