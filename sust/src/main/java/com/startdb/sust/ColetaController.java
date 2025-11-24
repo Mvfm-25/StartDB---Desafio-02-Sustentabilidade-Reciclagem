@@ -13,6 +13,9 @@ public class ColetaController {
     @Autowired
     private ColetaService coletaService;
 
+    @Autowired
+    private ViaCepService viaCepService;
+
     // GET todos os pontos
     @GetMapping("/pontos")
     public ResponseEntity<List<PontoColeta>> getTodosPontos(){
@@ -137,5 +140,35 @@ public class ColetaController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    // GET informações de endereço pelo CEP (ViaCEP)
+    @GetMapping("/viacep/{cep}")
+    public ResponseEntity<ViaCepResponse> buscarCep(@PathVariable String cep){
+        ViaCepResponse response = viaCepService.buscarPorCep(cep);
+        if(response == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    // POST criar endereço a partir de um CEP
+    @PostMapping("/endereco-por-cep")
+    public ResponseEntity<Endereco> criarEnderecoPorCep(@RequestParam String cep, @RequestParam String numero, @RequestParam(required = false) String complemento){
+        Endereco endereco = viaCepService.criarEnderecoAPartirDeCep(cep, numero, complemento);
+        if(endereco == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(endereco);
+    }
+
+    // POST criar endereço com cidade e UF integrados
+    @PostMapping("/endereco-completo-por-cep")
+    public ResponseEntity<EnderecoComCidade> criarEnderecoCompletoParaoCep(@RequestParam String cep, @RequestParam String numero, @RequestParam(required = false) String complemento){
+        EnderecoComCidade endereco = viaCepService.criarEnderecoComCidade(cep, numero, complemento);
+        if(endereco == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(endereco);
     }
 }
