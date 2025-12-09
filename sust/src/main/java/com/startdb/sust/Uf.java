@@ -10,6 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.FetchType;
+import java.util.List;
 
 @Entity
 public class Uf {
@@ -19,6 +22,8 @@ public class Uf {
     private long id;
     private String nome;      // Ex: "São Paulo"
     private String sigla;     // Ex: "SP"
+    @OneToMany(mappedBy = "uf", fetch = FetchType.LAZY)
+    private List<Cidade> cidades;
 
     public Uf(){}
 
@@ -35,6 +40,9 @@ public class Uf {
 
     public String getSigla(){return sigla;}
     public void setSigla(String sigla){this.sigla = sigla;}
+
+    public List<Cidade> getCidades(){return cidades;}
+    public void setCidades(List<Cidade> cidades){this.cidades = cidades;}
 
     @Override
     public String toString(){
