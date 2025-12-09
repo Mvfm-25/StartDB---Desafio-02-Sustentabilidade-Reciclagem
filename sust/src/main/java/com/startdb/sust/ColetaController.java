@@ -172,4 +172,14 @@ public class ColetaController {
         }
         return ResponseEntity.ok(endereco);
     }
+
+    // POST validar e obter UF e Cidade (cria se não existir)
+    @PostMapping("/validar-uf-cidade")
+    public ResponseEntity<EnderecoComCidade> validarUfECidade(@RequestParam String cidade, @RequestParam String uf){
+        EnderecoComCidade resultado = coletaService.validarEOuCriarUfECidade(cidade, uf);
+        if(resultado == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(resultado);
+    }
 }

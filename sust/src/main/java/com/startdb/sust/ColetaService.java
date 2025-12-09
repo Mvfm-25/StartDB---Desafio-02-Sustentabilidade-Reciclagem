@@ -17,6 +17,9 @@ public class ColetaService {
     @Autowired
     private PontoColetaRepository pontoColetaRepository;
 
+    @Autowired
+    private UfRepository ufRepository;
+
     // Retorna todos os pontos de Pontos.java
     public List<PontoColeta> getTudo(){
         return pontoColetaRepository.findAll();
@@ -156,5 +159,33 @@ public class ColetaService {
         }
         ponto.getHorariosFunc().remove(indice);
         return pontoColetaRepository.save(ponto);
+    }
+
+    // Valida e obtém UF e Cidade a partir dos dados do frontend
+    // Se não existirem, cria novos registros
+    public EnderecoComCidade validarEOuCriarUfECidade(String nomeCidade, String siglaUf){
+        // Busca ou cria o Estado (UF)
+        Uf uf = ufRepository.findBySigla(siglaUf.toUpperCase()).orElse(null);
+        if(uf == null){
+            // Se não existe, cria um novo estado
+            uf = new Uf();
+            uf.setSigla(siglaUf.toUpperCase());
+            uf.setNome(siglaUf); // Pode ser melhorado com um mapa de siglas -> nomes completos
+            uf = ufRepository.save(uf);
+        }
+
+        // Busca ou cria a Cidade
+        Cidade cidade = cidadeRepository.findByNomeAndUfId(nomeCidade, uf.getId()).orElse(null);
+        if(cidade == null){
+            // Se não existe, cria uma nova cidade
+            cidade = new Cidade();
+            cidade.setNome(nomeCidade);
+            cidade.setUf(uf);
+            cidade.setPontos(new java.util.ArrayList<>()); // Inicializa lista vazia de pontos
+            cidade = cidadeRepository.save(cidade);
+        }
+
+        // Retorna o DTO com os dados validados/criados
+        return new EnderecoComCidade(null, cidade, uf);
     }
 }
