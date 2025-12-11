@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.ElementCollection;
 import java.util.List;
@@ -29,6 +30,8 @@ public class PontoColeta {
     private String desc;
     @ElementCollection
     private List<HorarioFuncionamento> horariosFunc;
+    @ManyToOne
+    private Cidade cidade;
      
     public PontoColeta(){}
 
@@ -50,5 +53,8 @@ public class PontoColeta {
 
     public List<HorarioFuncionamento> getHorariosFunc(){return horariosFunc;}
     public void setHorariosFunc(List<HorarioFuncionamento> horariosFunc){this.horariosFunc = horariosFunc;}
+
+    public Cidade getCidade(){return cidade;}
+    public void setCidade(Cidade cidade){this.cidade = cidade;}
 
 }

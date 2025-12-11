@@ -22,7 +22,7 @@ public class Cidade {
     private String nome;
     @ManyToOne
     private Uf uf;
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "cidade", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PontoColeta> pontos;
 
     // Novamente, receita de bolo.

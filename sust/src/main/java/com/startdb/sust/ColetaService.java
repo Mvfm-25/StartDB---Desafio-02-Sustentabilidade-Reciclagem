@@ -259,4 +259,36 @@ public class ColetaService {
         // Retorna o DTO com os dados validados/criados
         return new EnderecoComCidade(null, cidade, uf);
     }
+
+    // Retorna todas as cidades
+    public List<Cidade> getTodosCidades(){
+        return cidadeRepository.findAll();
+    }
+
+    // Retorna todas as UFs
+    public List<Uf> getTodosUfs(){
+        return ufRepository.findAll();
+    }
+
+    // Busca cidades por UF
+    public List<Cidade> getCidadesPorUf(String siglaUf){
+        Uf uf = ufRepository.findBySigla(siglaUf.toUpperCase()).orElse(null);
+        if(uf == null){
+            return null;
+        }
+        return cidadeRepository.findByUfId(uf.getId());
+    }
+
+    // Busca uma cidade por nome
+    public Cidade getCidadePorNome(String nome){
+        return cidadeRepository.findAll().stream()
+        .filter(c -> c.getNome().equalsIgnoreCase(nome))
+        .findFirst()
+        .orElse(null);
+    }
+
+    // Busca uma UF por sigla
+    public Uf getUfPorSigla(String sigla){
+        return ufRepository.findBySigla(sigla.toUpperCase()).orElse(null);
+    }
 }
