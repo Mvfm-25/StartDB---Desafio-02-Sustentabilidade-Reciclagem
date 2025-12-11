@@ -53,21 +53,37 @@ public class ColetaService {
         return cidade.getPontos();
     }
 
-    // Adiciona um novo ponto a uma cidade
+    // Adiciona um novo ponto a uma cidade (cria a cidade se não existir)
     public PontoColeta adicionarPontoACidade(String nomeCidade, PontoColeta novoPonto){
         Cidade cidade = cidadeRepository.findAll().stream()
         .filter(c -> c.getNome().equalsIgnoreCase(nomeCidade))
         .findFirst()
         .orElse(null);
         
+        // Se a cidade não existir, cria uma nova
         if(cidade == null){
-            return null;
+            cidade = new Cidade();
+            cidade.setNome(nomeCidade);
+            cidade.setPontos(new java.util.ArrayList<>());
+            // Tenta usar uma UF padrão ou cria uma genérica
+            Uf ufPadrao = ufRepository.findAll().stream().findFirst().orElse(null);
+            if(ufPadrao == null){
+                ufPadrao = new Uf();
+                ufPadrao.setSigla("SP");
+                ufPadrao.setNome("São Paulo");
+                ufPadrao = ufRepository.save(ufPadrao);
+            }
+            cidade.setUf(ufPadrao);
+            cidade = cidadeRepository.save(cidade);
         }
         
         // Salva o novo ponto no banco
         PontoColeta pontoSalvo = pontoColetaRepository.save(novoPonto);
         
         // Adiciona à lista de pontos da cidade
+        if(cidade.getPontos() == null){
+            cidade.setPontos(new java.util.ArrayList<>());
+        }
         cidade.getPontos().add(pontoSalvo);
         cidadeRepository.save(cidade);
         
