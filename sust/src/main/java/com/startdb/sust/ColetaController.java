@@ -63,6 +63,16 @@ public class ColetaController {
         return ResponseEntity.ok(pontos);
     }
 
+    // GET pontos por tipo de coleta
+    @GetMapping("/coletas/{tipo}")
+    public ResponseEntity<List<PontoColeta>> getPontosPorTipoColeta(@PathVariable String tipo){
+        List<PontoColeta> pontos = coletaService.getPontoPorColeta(tipo);
+        if(pontos == null || pontos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pontos);
+    }
+
     // GET pontos que funcionam em um dia da semana específico
     @GetMapping("/dias-semana/{diaSemana}/pontos")
     public ResponseEntity<List<PontoColeta>> getPontosPorDiaSemana(@PathVariable String diaSemana){

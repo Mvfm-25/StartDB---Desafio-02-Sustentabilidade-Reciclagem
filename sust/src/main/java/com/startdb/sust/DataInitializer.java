@@ -27,26 +27,26 @@ public class DataInitializer implements CommandLineRunner {
     private void initializeData() {
         // Criar tipos de coleta se não existirem
         TipoColeta tipoPlastico = new TipoColeta();
-        tipoPlastico.setNome("Plástico");
+        tipoPlastico.setNome("plastico");
         tipoPlastico = tipoColetaRepository.save(tipoPlastico);
 
         TipoColeta tipoMetal = new TipoColeta();
-        tipoMetal.setNome("Metal");
+        tipoMetal.setNome("metal");
         tipoMetal = tipoColetaRepository.save(tipoMetal);
 
         TipoColeta tivoPapel = new TipoColeta();
-        tivoPapel.setNome("Papel");
+        tivoPapel.setNome("papel");
         tivoPapel = tipoColetaRepository.save(tivoPapel);
 
         TipoColeta tipoVidro = new TipoColeta();
-        tipoVidro.setNome("Vidro");
+        tipoVidro.setNome("vidro");
         tipoVidro = tipoColetaRepository.save(tipoVidro);
 
         // Criar pontos de coleta de exemplo
         // Ponto 1
         PontoColeta ponto1 = new PontoColeta();
         ponto1.setNomePonto("Ponto de Coleta Centro");
-        ponto1.setTipoColeta(tipoPlastico);
+        ponto1.setTiposColeta(Arrays.asList(tipoPlastico, tipoMetal));
         ponto1.setDesc("Ponto de coleta localizado no centro da cidade");
         
         Endereco endereco1 = new Endereco("Rua das Flores", "123", "Centro", "01234-567", null);
@@ -63,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
         // Ponto 2
         PontoColeta ponto2 = new PontoColeta();
         ponto2.setNomePonto("Ponto de Coleta Zona Leste");
-        ponto2.setTipoColeta(tipoMetal);
+        ponto2.setTiposColeta(Arrays.asList(tipoMetal, tivoPapel));
         ponto2.setDesc("Ponto de coleta na região leste");
         
         Endereco endereco2 = new Endereco("Avenida Brasil", "456", "Vila Mariana", "04102-000", null);
@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
         // Ponto 3
         PontoColeta ponto3 = new PontoColeta();
         ponto3.setNomePonto("Ponto de Coleta Zona Norte");
-        ponto3.setTipoColeta(tivoPapel);
+        ponto3.setTiposColeta(Arrays.asList(tivoPapel, tipoVidro));
         ponto3.setDesc("Ponto de coleta na região norte");
         
         Endereco endereco3 = new Endereco("Rua da Paz", "789", "Santana", "02222-000", null);
@@ -97,7 +97,7 @@ public class DataInitializer implements CommandLineRunner {
         // Ponto 4
         PontoColeta ponto4 = new PontoColeta();
         ponto4.setNomePonto("Ponto de Coleta Zona Oeste");
-        ponto4.setTipoColeta(tipoVidro);
+        ponto4.setTiposColeta(Arrays.asList(tipoVidro, tipoPlastico));
         ponto4.setDesc("Ponto de coleta na região oeste");
         
         Endereco endereco4 = new Endereco("Rua do Comércio", "321", "Pinheiros", "05429-000", null);

@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * Testes unitários da entidade PontoColeta.
  * 
- * Estrutura: Testes agrupados por comportamento (não por getter/setter).
+ * Estrutura: Testes agrupados por comportamento.
  * - Teste de instanciação
  * - Teste de relacionamentos
- * - Teste de dados críticos (validações futuras)
+ * - Teste de dados críticos.
  * - Testes de casos extremos
  */
 @DisplayName("PontoColeta")
@@ -88,23 +88,34 @@ public class PontoColetaTest {
 
     // ==================== TESTES DE RELACIONAMENTOS ====================
     @Nested
-    @DisplayName("Relacionamentos (ManyToOne, Embedded)")
+    @DisplayName("Relacionamentos (ManyToMany, Embedded)")
     class RelacionamentoTests {
 
         @Test
-        @DisplayName("Deve manter relacionamento com TipoColeta")
-        void shouldMaintainTipoColetaRelationship() {
-            pontoColeta.setTipoColeta(tipoColeta);
+        @DisplayName("Deve manter relacionamento com múltiplos TiposColeta")
+        void shouldMaintainTiposColetaRelationship() {
+            List<TipoColeta> tiposColeta = new ArrayList<>();
+            tiposColeta.add(tipoColeta);
+            pontoColeta.setTiposColeta(tiposColeta);
             
-            assertSame(tipoColeta, pontoColeta.getTipoColeta());
+            assertSame(tiposColeta, pontoColeta.getTiposColeta());
         }
 
         @Test
-        @DisplayName("Deve permitir TipoColeta null")
-        void shouldAllowNullTipoColeta() {
-            pontoColeta.setTipoColeta(null);
+        @DisplayName("Deve permitir TiposColeta null")
+        void shouldAllowNullTiposColeta() {
+            pontoColeta.setTiposColeta(null);
             
-            assertNull(pontoColeta.getTipoColeta());
+            assertNull(pontoColeta.getTiposColeta());
+        }
+
+        @Test
+        @DisplayName("Deve permitir lista vazia de TiposColeta")
+        void shouldAllowEmptyTiposColetaList() {
+            List<TipoColeta> vazia = new ArrayList<>();
+            pontoColeta.setTiposColeta(vazia);
+            
+            assertTrue(pontoColeta.getTiposColeta().isEmpty());
         }
 
         @Test
@@ -189,11 +200,13 @@ public class PontoColetaTest {
             String expectedNome = "Ponto Central";
             String expectedDesc = "Recicláveis diversos";
             List<HorarioFuncionamento> expectedHorarios = new ArrayList<>();
+            List<TipoColeta> expectedTipos = new ArrayList<>();
+            expectedTipos.add(tipoColeta);
 
             // Act
             pontoColeta.setId(expectedId);
             pontoColeta.setNomePonto(expectedNome);
-            pontoColeta.setTipoColeta(tipoColeta);
+            pontoColeta.setTiposColeta(expectedTipos);
             pontoColeta.setEndereco(endereco);
             pontoColeta.setDesc(expectedDesc);
             pontoColeta.setHorariosFunc(expectedHorarios);
@@ -201,7 +214,7 @@ public class PontoColetaTest {
             // Assert - Verifica se todos os campos foram preservados
             assertEquals(expectedId, pontoColeta.getId());
             assertEquals(expectedNome, pontoColeta.getNomePonto());
-            assertSame(tipoColeta, pontoColeta.getTipoColeta());
+            assertSame(expectedTipos, pontoColeta.getTiposColeta());
             assertSame(endereco, pontoColeta.getEndereco());
             assertEquals(expectedDesc, pontoColeta.getDesc());
             assertSame(expectedHorarios, pontoColeta.getHorariosFunc());

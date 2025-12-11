@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.ElementCollection;
 import java.util.List;
@@ -21,8 +21,8 @@ public class PontoColeta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
-    private TipoColeta tipoColeta;
+    @ManyToMany
+    private List<TipoColeta> tiposColeta;
     private String nomePonto;
     @Embedded
     private Endereco endereco;
@@ -39,8 +39,8 @@ public class PontoColeta {
     public String getNomePonto(){return nomePonto;}
     public void setNomePonto(String nomePonto){this.nomePonto = nomePonto;}
 
-    public TipoColeta getTipoColeta(){return tipoColeta;}
-    public void setTipoColeta(TipoColeta tipoColeta){this.tipoColeta = tipoColeta;}
+    public List<TipoColeta> getTiposColeta(){return tiposColeta;}
+    public void setTiposColeta(List<TipoColeta> tiposColeta){this.tiposColeta = tiposColeta;}
 
     public Endereco getEndereco(){return endereco;}
     public void setEndereco(Endereco endereco){this.endereco = endereco;}

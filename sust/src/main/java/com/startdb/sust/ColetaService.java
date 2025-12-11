@@ -36,14 +36,23 @@ public class ColetaService {
     // Retorna uma lista de pontos de coleta, baseando-se no tipo de coleta sendo feita lá.
     public List<PontoColeta> getPontoPorColeta(String tipo){
         return pontoColetaRepository.findAll().stream()
-        .filter(c -> c.getTipoColeta() != null && c.getTipoColeta().getNome().equalsIgnoreCase(tipo))
+        .filter(c -> c.getTiposColeta() != null && 
+                     c.getTiposColeta().stream()
+                      .anyMatch(t -> t.getNome().equalsIgnoreCase(tipo)))
         .toList();
+    }
+
+    // Normaliza string removendo acentos e espaços
+    private String normalizarString(String str) {
+        if (str == null) return null;
+        return str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 
     // Retorna todos os pontos de uma cidade específica
     public List<PontoColeta> getPontosPorCidade(String nomeCidade){
+        String nomeCidadeNormalizado = normalizarString(nomeCidade);
         Cidade cidade = cidadeRepository.findAll().stream()
-        .filter(c -> c.getNome().equalsIgnoreCase(nomeCidade))
+        .filter(c -> normalizarString(c.getNome()).equals(nomeCidadeNormalizado))
         .findFirst()
         .orElse(null);
         
@@ -55,15 +64,18 @@ public class ColetaService {
 
     // Adiciona um novo ponto a uma cidade (cria a cidade se não existir)
     public PontoColeta adicionarPontoACidade(String nomeCidade, PontoColeta novoPonto){
+        String nomeCidadeNormalizado = normalizarString(nomeCidade);
         Cidade cidade = cidadeRepository.findAll().stream()
-        .filter(c -> c.getNome().equalsIgnoreCase(nomeCidade))
+        .filter(c -> normalizarString(c.getNome()).equals(nomeCidadeNormalizado))
         .findFirst()
         .orElse(null);
         
         // Se a cidade não existir, cria uma nova
         if(cidade == null){
             cidade = new Cidade();
-            cidade.setNome(nomeCidade);
+            // Se o nome vier sem acentos/espaços, adiciona de forma mais amigável
+            String nomeFormatado = nomeCidade.replaceAll("([a-z])([A-Z])", "$1 $2");
+            cidade.setNome(nomeFormatado.length() > 0 ? nomeFormatado : nomeCidade);
             cidade.setPontos(new java.util.ArrayList<>());
             // Tenta usar uma UF padrão ou cria uma genérica
             Uf ufPadrao = ufRepository.findAll().stream().findFirst().orElse(null);
