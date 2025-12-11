@@ -10,7 +10,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class HorarioFuncionamento {
-    private String diaSemana;      // Ex: "Segunda-Sexta", "Sábado-Domingo", "Seg-Sex", etc
+    private String diaSemana;      // Ex: "SEGUNDA", "TERÇA", etc (usar enum DiaSemana)
     private String horaAbertura;   // Ex: "08:00"
     private String horaFechamento; // Ex: "18:00"
     private boolean funcionaFeriado; // Se funciona em feriados
@@ -27,6 +27,15 @@ public class HorarioFuncionamento {
     // Getters e Setters
     public String getDiaSemana(){return diaSemana;}
     public void setDiaSemana(String diaSemana){this.diaSemana = diaSemana;}
+    
+    // Método auxiliar para obter o Enum do dia
+    public DiaSemana getDiaSemanaEnum(){
+        try {
+            return DiaSemana.valueOf(diaSemana);
+        } catch (IllegalArgumentException e) {
+            return DiaSemana.porNomePortugues(diaSemana);
+        }
+    }
 
     public String getHoraAbertura(){return horaAbertura;}
     public void setHoraAbertura(String horaAbertura){this.horaAbertura = horaAbertura;}

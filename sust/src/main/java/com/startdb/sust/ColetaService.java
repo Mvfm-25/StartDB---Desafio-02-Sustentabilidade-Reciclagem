@@ -95,6 +95,49 @@ public class ColetaService {
         .toList();
     }
 
+    // Retorna pontos que funcionam em um dia da semana específico
+    public List<PontoColeta> getPontosPorDiaSemana(String diaSemana){
+        return pontoColetaRepository.findAll().stream()
+        .filter(p -> p.getHorariosFunc() != null && 
+                     p.getHorariosFunc().stream().anyMatch(h -> 
+                         h.getDiaSemana() != null && 
+                         (h.getDiaSemana().equalsIgnoreCase(diaSemana) || 
+                          h.getDiaSemana().toUpperCase().equals(diaSemana.toUpperCase()))))
+        .toList();
+    }
+
+    // Retorna pontos que funcionam HOJE
+    public List<PontoColeta> getPontosFuncionandoHoje(){
+        DiaSemana hoje = DiaSemana.getHoje();
+        return getPontosPorDiaSemana(hoje.name());
+    }
+
+    // Retorna pontos que funcionam em um horário específico (ex: agora)
+    public List<PontoColeta> getPontosAbertosAgora(){
+        java.time.LocalTime agora = java.time.LocalTime.now();
+        DiaSemana hoje = DiaSemana.getHoje();
+        
+        return pontoColetaRepository.findAll().stream()
+        .filter(p -> p.getHorariosFunc() != null && 
+                     p.getHorariosFunc().stream().anyMatch(h -> 
+                         h.getDiaSemana() != null &&
+                         (h.getDiaSemana().equalsIgnoreCase(hoje.name()) || 
+                          h.getDiaSemana().equalsIgnoreCase(hoje.getNomePortugues())) &&
+                         isHorarioAberto(h, agora)))
+        .toList();
+    }
+
+    // Método auxiliar para verificar se um horário está aberto
+    private boolean isHorarioAberto(HorarioFuncionamento horario, java.time.LocalTime hora){
+        try {
+            java.time.LocalTime abertura = java.time.LocalTime.parse(horario.getHoraAbertura());
+            java.time.LocalTime fechamento = java.time.LocalTime.parse(horario.getHoraFechamento());
+            return !hora.isBefore(abertura) && hora.isBefore(fechamento);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // Atualiza o endereço de um ponto
     public PontoColeta atualizarEndereco(long id, Endereco novoEndereco){
         PontoColeta ponto = pontoColetaRepository.findById(id).orElse(null);

@@ -63,6 +63,36 @@ public class ColetaController {
         return ResponseEntity.ok(pontos);
     }
 
+    // GET pontos que funcionam em um dia da semana específico
+    @GetMapping("/dias-semana/{diaSemana}/pontos")
+    public ResponseEntity<List<PontoColeta>> getPontosPorDiaSemana(@PathVariable String diaSemana){
+        List<PontoColeta> pontos = coletaService.getPontosPorDiaSemana(diaSemana);
+        if(pontos == null || pontos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pontos);
+    }
+
+    // GET pontos que funcionam HOJE
+    @GetMapping("/pontos/hoje")
+    public ResponseEntity<List<PontoColeta>> getPontosFuncionandoHoje(){
+        List<PontoColeta> pontos = coletaService.getPontosFuncionandoHoje();
+        if(pontos == null || pontos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pontos);
+    }
+
+    // GET pontos que estão ABERTOS AGORA
+    @GetMapping("/pontos/abertos-agora")
+    public ResponseEntity<List<PontoColeta>> getPontosAbertosAgora(){
+        List<PontoColeta> pontos = coletaService.getPontosAbertosAgora();
+        if(pontos == null || pontos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pontos);
+    }
+
     // POST novo ponto em uma cidade
     @PostMapping("/cidades/{nomeCidade}/pontos")
     public ResponseEntity<PontoColeta> adicionarPonto(@PathVariable String nomeCidade, @RequestBody PontoColeta novoPonto){
