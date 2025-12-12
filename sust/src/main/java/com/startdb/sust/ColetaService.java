@@ -8,7 +8,9 @@ package com.startdb.sust;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Collections; // Importado para Collections.emptyList()
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class ColetaService {
@@ -21,8 +23,8 @@ public class ColetaService {
     @Autowired
     private UfRepository ufRepository;
     
-    @Autowired
-    private TipoColetaRepository tipoColetaRepository; // NOVO: Injeção do repositório de Tipos de Coleta
+    @Autowired // NOVO/RE-ADICIONADO
+    private TipoColetaRepository tipoColetaRepository; 
 
     // Retorna todos os pontos de Pontos.java
     public List<PontoColeta> getTudo(){
@@ -296,23 +298,48 @@ public class ColetaService {
         return ufRepository.findBySigla(sigla.toUpperCase()).orElse(null);
     }
     
-    // --- NOVO MÉTODO 1/2: Retorna todos os tipos de coleta registrados no sistema ---
+    // --- MÉTODOS PARA TIPOS DE COLETA (NOVOS) ---
+    
+    // Retorna todos os tipos de coleta registrados no sistema.
     public List<TipoColeta> getTodosTiposColeta() {
         return tipoColetaRepository.findAll();
     }
 
-    // --- NOVO MÉTODO 2/2: Adiciona uma lista de novos tipos de coleta, forçando ID 0 para auto-incremento ---
+    /**
+     * Adiciona uma lista de novos tipos de coleta.
+     * Verifica se o tipo já existe pelo nome antes de salvar.
+     * O ID é definido para 0 para forçar a geração de um novo ID pelo banco, se for novo.
+     * @param novosTipos Lista de TipoColeta a ser salva.
+     * @return A lista de TipoColeta salva (ou existentes) com os IDs gerados/originais.
+     */
     public List<TipoColeta> adicionarTiposColeta(List<TipoColeta> novosTipos) {
         if (novosTipos == null || novosTipos.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Garante que o ID é 0 para forçar a geração de um novo ID pelo banco (IDENTITY)
-        // Isso impede que IDs enviados pelo usuário sejam usados para sobrescrever dados existentes.
-        for (TipoColeta tipo : novosTipos) {
-            tipo.setId(0L); 
+        List<TipoColeta> tiposParaSalvar = new ArrayList<>();
+        List<TipoColeta> tiposSalvosOuExistentes = new ArrayList<>();
+
+        for (TipoColeta novoTipo : novosTipos) {
+            
+            // 1. Verifica se já existe um TipoColeta com o mesmo nome (ignorando case)
+            Optional<TipoColeta> tipoExistente = tipoColetaRepository.findByNomeIgnoreCase(novoTipo.getNome());
+            
+            if (tipoExistente.isPresent()) {
+                // Se já existe, retorna o tipo existente para evitar duplicação.
+                tiposSalvosOuExistentes.add(tipoExistente.get());
+            } else {
+                // 2. Se não existe, marca o ID como 0 para forçar o auto-incremento
+                novoTipo.setId(0L); 
+                tiposParaSalvar.add(novoTipo);
+            }
         }
 
-        return tipoColetaRepository.saveAll(novosTipos);
+        // 3. Salva apenas os novos tipos
+        if (!tiposParaSalvar.isEmpty()) {
+            tiposSalvosOuExistentes.addAll(tipoColetaRepository.saveAll(tiposParaSalvar));
+        }
+
+        return tiposSalvosOuExistentes;
     }
 }

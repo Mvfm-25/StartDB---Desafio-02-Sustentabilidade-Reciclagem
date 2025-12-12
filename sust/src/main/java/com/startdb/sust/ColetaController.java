@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Collections; // Import adicionado para Collections.emptyList()
+import java.util.stream.Collectors; // ADICIONADO para DTO mapping
 
 @RestController
 @RequestMapping("/api")
@@ -18,10 +18,15 @@ public class ColetaController {
     @Autowired
     private ViaCepService viaCepService;
 
-    // GET todos os pontos
+    // GET todos os pontos (MODIFICADO: AGORA RETORNA AGRUPADO POR CIDADE/UF)
     @GetMapping("/pontos")
-    public ResponseEntity<List<PontoColeta>> getTodosPontos(){
-        return ResponseEntity.ok(coletaService.getTudo());
+    public ResponseEntity<List<Cidade>> getTodosPontos(){
+        // Agora retorna a lista de cidades, que por sua vez contém os pontos
+        List<Cidade> cidades = coletaService.getTodosCidades(); 
+        if(cidades == null || cidades.isEmpty()){
+            return ResponseEntity.ok(new java.util.ArrayList<>());
+        }
+        return ResponseEntity.ok(cidades);
     }
 
     // GET pontos de uma cidade específica
@@ -183,32 +188,6 @@ public class ColetaController {
         }
         return ResponseEntity.noContent().build();
     }
-    
-    // --- NOVO ENDPOINT 1/2: GET todos os tipos de coleta registrados ---
-    @GetMapping("/tipos-coleta")
-    public ResponseEntity<List<TipoColeta>> getTodosTiposColeta(){
-        List<TipoColeta> tipos = coletaService.getTodosTiposColeta();
-        // Retorna 200 OK com lista vazia se não houver registros
-        return ResponseEntity.ok(tipos != null ? tipos : new java.util.ArrayList<>());
-    }
-    
-    // --- NOVO ENDPOINT 2/2: POST para cadastrar novos tipos de coleta ---
-    @PostMapping("/tipos-coleta")
-    public ResponseEntity<List<TipoColeta>> adicionarTiposColeta(@RequestBody List<TipoColeta> novosTipos){
-        if (novosTipos == null || novosTipos.isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList());
-        }
-        
-        // O serviço garante que o ID será gerado, forçando novos registros
-        List<TipoColeta> tiposSalvos = coletaService.adicionarTiposColeta(novosTipos);
-        
-        if (tiposSalvos.isEmpty()) {
-            return ResponseEntity.internalServerError().body(Collections.emptyList()); 
-        }
-        
-        // Retorna 201 Created com a lista de tipos já com os IDs gerados
-        return ResponseEntity.status(HttpStatus.CREATED).body(tiposSalvos);
-    }
 
     // GET informações de endereço pelo CEP (ViaCEP)
     @GetMapping("/viacep/{cep}")
@@ -260,14 +239,20 @@ public class ColetaController {
         return ResponseEntity.ok(ufs);
     }
 
-    // GET todas as cidades
+    // GET todas as cidades (MODIFICADO: AGORA SIMPLIFICADO: APENAS CIDADE E UF)
     @GetMapping("/cidades/todas")
-    public ResponseEntity<List<Cidade>> getTodosCidades(){
+    public ResponseEntity<List<CidadeSimplesDto>> getTodosCidades(){
         List<Cidade> cidades = coletaService.getTodosCidades();
         if(cidades == null || cidades.isEmpty()){
             return ResponseEntity.ok(new java.util.ArrayList<>());
         }
-        return ResponseEntity.ok(cidades);
+        
+        // Mapeia a lista de Cidade para a lista de CidadeSimplesDto
+        List<CidadeSimplesDto> cidadesSimples = cidades.stream()
+            .map(CidadeSimplesDto::new)
+            .collect(Collectors.toList());
+            
+        return ResponseEntity.ok(cidadesSimples);
     }
 
     // GET uma UF por sigla
