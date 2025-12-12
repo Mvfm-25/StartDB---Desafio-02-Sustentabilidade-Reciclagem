@@ -223,34 +223,34 @@ public class ColetaController {
         return ResponseEntity.ok(resultado);
     }
 
-    // GET todas as cidades
-    @GetMapping("/cidades")
-    public ResponseEntity<List<Cidade>> getTodosCidades(){
-        List<Cidade> cidades = coletaService.getTodosCidades();
-        if(cidades == null || cidades.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(cidades);
-    }
-
     // GET todas as UFs
-    @GetMapping("/ufs")
+    @GetMapping("/ufs/todas")
     public ResponseEntity<List<Uf>> getTodosUfs(){
         List<Uf> ufs = coletaService.getTodosUfs();
         if(ufs == null || ufs.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(new java.util.ArrayList<>());
         }
         return ResponseEntity.ok(ufs);
     }
 
-    // GET cidades por UF
-    @GetMapping("/ufs/{sigla}/cidades")
-    public ResponseEntity<List<Cidade>> getCidadesPorUf(@PathVariable String sigla){
-        List<Cidade> cidades = coletaService.getCidadesPorUf(sigla);
+    // GET todas as cidades
+    @GetMapping("/cidades/todas")
+    public ResponseEntity<List<Cidade>> getTodosCidades(){
+        List<Cidade> cidades = coletaService.getTodosCidades();
         if(cidades == null || cidades.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(new java.util.ArrayList<>());
         }
         return ResponseEntity.ok(cidades);
+    }
+
+    // GET uma UF por sigla
+    @GetMapping("/ufs/{sigla}")
+    public ResponseEntity<Uf> getUfPorSigla(@PathVariable String sigla){
+        Uf uf = coletaService.getUfPorSigla(sigla);
+        if(uf == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(uf);
     }
 
     // GET uma cidade por nome
@@ -263,13 +263,13 @@ public class ColetaController {
         return ResponseEntity.ok(cidade);
     }
 
-    // GET uma UF por sigla
-    @GetMapping("/ufs/{sigla}")
-    public ResponseEntity<Uf> getUfPorSigla(@PathVariable String sigla){
-        Uf uf = coletaService.getUfPorSigla(sigla);
-        if(uf == null){
-            return ResponseEntity.notFound().build();
+    // GET cidades por UF
+    @GetMapping("/ufs/{sigla}/cidades")
+    public ResponseEntity<List<Cidade>> getCidadesPorUf(@PathVariable String sigla){
+        List<Cidade> cidades = coletaService.getCidadesPorUf(sigla);
+        if(cidades == null || cidades.isEmpty()){
+            return ResponseEntity.ok(new java.util.ArrayList<>());
         }
-        return ResponseEntity.ok(uf);
+        return ResponseEntity.ok(cidades);
     }
 }
