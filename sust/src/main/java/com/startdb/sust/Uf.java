@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.FetchType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,7 @@ public class Uf {
     private String nome;      // Ex: "São Paulo"
     private String sigla;     // Ex: "SP"
     @OneToMany(mappedBy = "uf", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Cidade> cidades;
 
     public Uf(){}

@@ -9,11 +9,17 @@ public class DataInitializer implements CommandLineRunner {
 
     private final PontoColetaRepository pontoColetaRepository;
     private final TipoColetaRepository tipoColetaRepository;
+    private final CidadeRepository cidadeRepository;
+    private final UfRepository ufRepository;
 
     public DataInitializer(PontoColetaRepository pontoColetaRepository, 
-                           TipoColetaRepository tipoColetaRepository) {
+                           TipoColetaRepository tipoColetaRepository,
+                           CidadeRepository cidadeRepository,
+                           UfRepository ufRepository) {
         this.pontoColetaRepository = pontoColetaRepository;
         this.tipoColetaRepository = tipoColetaRepository;
+        this.cidadeRepository = cidadeRepository;
+        this.ufRepository = ufRepository;
     }
 
     @Override
@@ -25,6 +31,19 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializeData() {
+        // Criar UFs (Estados)
+        Uf ufSP = new Uf();
+        ufSP.setSigla("SP");
+        ufSP.setNome("São Paulo");
+        ufSP = ufRepository.save(ufSP);
+
+        // Criar Cidades
+        Cidade cidadeSP = new Cidade();
+        cidadeSP.setNome("São Paulo");
+        cidadeSP.setUf(ufSP);
+        cidadeSP.setPontos(new java.util.ArrayList<>());
+        cidadeSP = cidadeRepository.save(cidadeSP);
+
         // Criar tipos de coleta se não existirem
         TipoColeta tipoPlastico = new TipoColeta();
         tipoPlastico.setNome("plastico");
@@ -48,6 +67,7 @@ public class DataInitializer implements CommandLineRunner {
         ponto1.setNomePonto("Ponto de Coleta Centro");
         ponto1.setTiposColeta(Arrays.asList(tipoPlastico, tipoMetal));
         ponto1.setDesc("Ponto de coleta localizado no centro da cidade");
+        ponto1.setCidade(cidadeSP);
         
         Endereco endereco1 = new Endereco("Rua das Flores", "123", "Centro", "01234-567", null);
         ponto1.setEndereco(endereco1);
@@ -65,6 +85,7 @@ public class DataInitializer implements CommandLineRunner {
         ponto2.setNomePonto("Ponto de Coleta Zona Leste");
         ponto2.setTiposColeta(Arrays.asList(tipoMetal, tivoPapel));
         ponto2.setDesc("Ponto de coleta na região leste");
+        ponto2.setCidade(cidadeSP);
         
         Endereco endereco2 = new Endereco("Avenida Brasil", "456", "Vila Mariana", "04102-000", null);
         ponto2.setEndereco(endereco2);
@@ -83,6 +104,7 @@ public class DataInitializer implements CommandLineRunner {
         ponto3.setNomePonto("Ponto de Coleta Zona Norte");
         ponto3.setTiposColeta(Arrays.asList(tivoPapel, tipoVidro));
         ponto3.setDesc("Ponto de coleta na região norte");
+        ponto3.setCidade(cidadeSP);
         
         Endereco endereco3 = new Endereco("Rua da Paz", "789", "Santana", "02222-000", null);
         ponto3.setEndereco(endereco3);
@@ -99,6 +121,7 @@ public class DataInitializer implements CommandLineRunner {
         ponto4.setNomePonto("Ponto de Coleta Zona Oeste");
         ponto4.setTiposColeta(Arrays.asList(tipoVidro, tipoPlastico));
         ponto4.setDesc("Ponto de coleta na região oeste");
+        ponto4.setCidade(cidadeSP);
         
         Endereco endereco4 = new Endereco("Rua do Comércio", "321", "Pinheiros", "05429-000", null);
         ponto4.setEndereco(endereco4);
@@ -113,6 +136,10 @@ public class DataInitializer implements CommandLineRunner {
 
         // Salvar todos os pontos
         pontoColetaRepository.saveAll(Arrays.asList(ponto1, ponto2, ponto3, ponto4));
+
+        // Atualizar a cidade com os pontos
+        cidadeSP.setPontos(Arrays.asList(ponto1, ponto2, ponto3, ponto4));
+        cidadeRepository.save(cidadeSP);
         
         System.out.println("✓ Base de dados populada com sucesso!");
     }

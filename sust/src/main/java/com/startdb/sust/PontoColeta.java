@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.ElementCollection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,7 @@ public class PontoColeta {
     @ElementCollection
     private List<HorarioFuncionamento> horariosFunc;
     @ManyToOne
+    @JsonIgnore
     private Cidade cidade;
      
     public PontoColeta(){}
