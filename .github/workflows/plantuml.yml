@@ -1,0 +1,18 @@
+name: Generate PlantUML
+on:
+  push:
+    paths:
+      - '**.plantuml'
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate PNG
+        uses: grassedge/generate-plantuml-action@v1.5
+        with:
+          path: .
+          message: "Render PlantUML files"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
