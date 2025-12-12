@@ -1,0 +1,111 @@
+@startuml
+
+class TipoColeta {
+  - id: Long
+  - nome: String
+  + getters/setters()
+}
+
+class PontoColeta {
+  - id: Long
+  - tipoColeta: TipoColeta
+  - nomePonto: String
+  - endereco: Endereco
+  - desc: String
+  - horariosFunc: List<HorarioFuncionamento>
+  + PontoColeta()
+  + getters/setters()
+}
+
+class HorarioFuncionamento {
+  - diaSemana: String
+  - horaAbertura: String
+  - horaFechamento: String
+  - funcionaFeriado: boolean
+  + HorarioFuncionamento()
+  + HorarioFuncionamento(diaSemana: String, horaAbertura: String, horaFechamento: String, funcionaFeriado: boolean)
+  + getHorarioFormatado(): String
+  + getters/setters()
+}
+
+class Endereco {
+  - rua: String
+  - numero: String
+  - bairro: String
+  - cep: String
+  - complemento: String
+  + Endereco()
+  + Endereco(rua: String, numero: String, bairro: String, cep: String, complemento: String)
+  + getters/setters()
+  + getEnderecoCompleto(): String
+}
+
+
+
+class Cidade {
+    - id: Long
+    - nome: String
+    - uf: Uf
+    - pontos: List<PontoColeta>
+    + Cidade()
+    + getters/setters()
+}
+
+class Uf {
+    - id: Long
+    - nome: String
+    - sigla: String
+    - cidades: List<Cidade>
+    + Uf()
+    + Uf(nome: String, sigla: String)
+    + getters/setters()
+    + toString(): String
+}
+
+
+
+
+
+
+PontoColeta "*" -- "1" TipoColeta
+Cidade "*" -- "1" Uf
+Cidade "1" -- "*" PontoColeta
+Endereco "1"-- "1" PontoColeta
+HorarioFuncionamento "*" -- "1" PontoColeta
+
+
+
+
+
+
+note top of TipoColeta
+  @Entity
+end note
+
+
+
+note top of HorarioFuncionamento
+  @Embeddable
+end note 
+
+note top of PontoColeta
+  @Entity
+
+end note 
+
+note top of Endereco
+  @Embeddable
+end note 
+
+note top of Cidade
+  @Entity
+
+end note 
+
+note top of Uf
+  @Entity
+
+end note 
+
+
+@enduml

@@ -1,0 +1,15 @@
+https://getbootstrap.com/docs/5.3/forms/overview/
+https://react-hook-form.com/docs/useform
+https://www.react-hook-form.com/get-started/#Applyvalidation
+https://www.youtube.com/watch?v=IzQb6NHKcZQ
+https://www.youtube.com/watch?v=qH272VSWje4&t=375s
+https://www.youtube.com/watch?v=rFWBYeqDLuw
+
+https://chat.deepseek.com/share/lku9vjkwx22it6wlfj
+https://www.youtube.com/watch?v=gnwnjBb5Vd8
+https://www.alura.com.br/artigos/async-await-no-javascript-o-que-e-e-quando-usar?utm_term=&utm_campaign=&utm_source=google&utm_medium=cpc&campaign_id=23137788902__&utm_id=23137788902__&hsa_acc=7964138385&hsa_cam=&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=google&hsa_ver=3&gad_source=1&gad_campaignid=23132128725&gbraid=0AAAAADpqZIDlu_GuuCyQQ6A2KlQEY9BCY&gclid=Cj0KCQiAubrJBhCbARIsAHIdxD8VYrlVDyrgsteIsc9poz7WZ-F9rJ3T0owCb9X7OfvipnfxONQUXgUaAlfwEALw_wcB
+https://www.alura.com.br/artigos/como-resolver-erro-de-cross-origin-resource-sharing?utm_term=&utm_campaign=&utm_source=google&utm_medium=cpc&campaign_id=23137788902__&utm_id=23137788902__&hsa_acc=7964138385&hsa_cam=&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=google&hsa_ver=3&gad_source=1&gad_campaignid=23132128725&gbraid=0AAAAADpqZIDlu_GuuCyQQ6A2KlQEY9BCY&gclid=CjwKCAiA3L_JBhAlEiwAlcWO5_pHCLoZFvYiIYAbquaLCx89jv5LKBvrf-fF92xucyYgPT6P7sTRTBoCwEUQAvD_BwE
+https://getbootstrap.com/docs/5.3/forms/select/
+https://www.youtube.com/watch?v=3cgeYXhoI88
+https://www.w3schools.com/tags/att_select_multiple.asp
+https://www.conventionalcommits.org/pt-br/v1.0.0-beta.4/

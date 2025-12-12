@@ -1,0 +1,81 @@
+@startuml
+
+title React App + Spring Boot API - Completo
+
+package "React Frontend" #61DAFB {
+  [React App]
+}
+
+package "Spring Boot API" #6DB33F {
+  [Controllers REST]
+  [Services]
+  [Repositories JPA]
+}
+
+database "Banco de Dados H2" #FF6B6B 
+
+[React App] -> [Controllers REST] : requisições HTTP
+[Controllers REST] -> [Services] : lógica de negócio
+[Services] -> [Repositories JPA] : Operações de acesso a dados
+[Repositories JPA] -> [Banco de Dados H2] : Executa consultas 
+
+note right of [React App]
+  <b>Endpoints de Pontos de Coleta:</b>
+  <b>GET</b>
+  • /api/pontos
+  • /api/cidades/{nomeCidade}/pontos
+  • /api/bairros/{nomeBairro}/pontos
+  • /api/ceps/{cep}/pontos
+  • /api/ruas/{nomeRua}/pontos
+  • /api/coletas/{tipo}
+  • /api/dias-semana/{diaSemana}/pontos
+  • /api/pontos/hoje
+  • /api/pontos/abertos-agora
+  • /api/pontos/{id}/horarios
+  • /api/pontos/{id}
+  
+  <b>POST</b>
+  • /api/cidades/{nomeCidade}/pontos
+  • /api/pontos/{id}/horarios
+  
+  <b>PUT</b>
+  • /api/pontos/{id}/endereco
+  • /api/pontos/{id}/horarios
+  
+  <b>DELETE</b>
+  • /api/pontos/{id}/horarios/{indice}
+  • /api/pontos/{id}
+  
+  ---
+  
+  <b>Endpoints de Localização (UF/Cidades):</b>
+  <b>GET</b>
+  • /api/ufs/todas
+  • /api/cidades/todas
+  • /api/ufs/{sigla}
+  • /api/cidades/{nome}
+  • /api/ufs/{sigla}/cidades
+  
+  <b>POST</b>
+  • /api/validar-uf-cidade
+  
+  ---
+  
+  <b>Endpoints ViaCEP:</b>
+  <b>GET</b>
+  • /api/viacep/{cep}
+  
+  <b>POST</b>
+  • /api/endereco-por-cep
+  • /api/endereco-completo-por-cep
+end note
+
+legend bottom
+  <b>Características:</b>
+  | Frontend | Backend | Banco |
+  | React com Hooks | Spring Boot REST | H2 Database |
+  | Axios para HTTP | JPA/Hibernate | Em memória |
+  | | 26 endpoints REST | |
+end legend
+
+@enduml
