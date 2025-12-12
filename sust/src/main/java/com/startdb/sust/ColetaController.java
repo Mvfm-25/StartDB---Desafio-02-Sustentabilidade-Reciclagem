@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Collections; // Import adicionado para Collections.emptyList()
 
 @RestController
 @RequestMapping("/api")
@@ -181,6 +182,32 @@ public class ColetaController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+    
+    // --- NOVO ENDPOINT 1/2: GET todos os tipos de coleta registrados ---
+    @GetMapping("/tipos-coleta")
+    public ResponseEntity<List<TipoColeta>> getTodosTiposColeta(){
+        List<TipoColeta> tipos = coletaService.getTodosTiposColeta();
+        // Retorna 200 OK com lista vazia se não houver registros
+        return ResponseEntity.ok(tipos != null ? tipos : new java.util.ArrayList<>());
+    }
+    
+    // --- NOVO ENDPOINT 2/2: POST para cadastrar novos tipos de coleta ---
+    @PostMapping("/tipos-coleta")
+    public ResponseEntity<List<TipoColeta>> adicionarTiposColeta(@RequestBody List<TipoColeta> novosTipos){
+        if (novosTipos == null || novosTipos.isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+        
+        // O serviço garante que o ID será gerado, forçando novos registros
+        List<TipoColeta> tiposSalvos = coletaService.adicionarTiposColeta(novosTipos);
+        
+        if (tiposSalvos.isEmpty()) {
+            return ResponseEntity.internalServerError().body(Collections.emptyList()); 
+        }
+        
+        // Retorna 201 Created com a lista de tipos já com os IDs gerados
+        return ResponseEntity.status(HttpStatus.CREATED).body(tiposSalvos);
     }
 
     // GET informações de endereço pelo CEP (ViaCEP)

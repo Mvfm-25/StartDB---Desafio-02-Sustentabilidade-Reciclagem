@@ -8,6 +8,7 @@ package com.startdb.sust;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Collections; // Importado para Collections.emptyList()
 
 @Service
 public class ColetaService {
@@ -19,6 +20,9 @@ public class ColetaService {
 
     @Autowired
     private UfRepository ufRepository;
+    
+    @Autowired
+    private TipoColetaRepository tipoColetaRepository; // NOVO: Injeção do repositório de Tipos de Coleta
 
     // Retorna todos os pontos de Pontos.java
     public List<PontoColeta> getTudo(){
@@ -290,5 +294,25 @@ public class ColetaService {
     // Busca uma UF por sigla
     public Uf getUfPorSigla(String sigla){
         return ufRepository.findBySigla(sigla.toUpperCase()).orElse(null);
+    }
+    
+    // --- NOVO MÉTODO 1/2: Retorna todos os tipos de coleta registrados no sistema ---
+    public List<TipoColeta> getTodosTiposColeta() {
+        return tipoColetaRepository.findAll();
+    }
+
+    // --- NOVO MÉTODO 2/2: Adiciona uma lista de novos tipos de coleta, forçando ID 0 para auto-incremento ---
+    public List<TipoColeta> adicionarTiposColeta(List<TipoColeta> novosTipos) {
+        if (novosTipos == null || novosTipos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Garante que o ID é 0 para forçar a geração de um novo ID pelo banco (IDENTITY)
+        // Isso impede que IDs enviados pelo usuário sejam usados para sobrescrever dados existentes.
+        for (TipoColeta tipo : novosTipos) {
+            tipo.setId(0L); 
+        }
+
+        return tipoColetaRepository.saveAll(novosTipos);
     }
 }
